@@ -26,23 +26,8 @@
  */
 uint8_t process_data(int16_t *buff)
 {
-	DIRECTION_LED_OFF;
+	 buff[0]=0;
 
-	/*Check param */
-	u_ASSERT(buff==0);
-
-	if (buff[0] < THRESHOLD_RIGHT)
-	{
-		LEFT_LED;
-		 return 0;
-	}
-	if (buff[0] > THRESHOLD_LEFT)
-	{
-		RIGHT_LED;
-		 return 4;
-	}
-
-
-return 5;
+	 return 0;
 
 }

@@ -18,6 +18,7 @@
 #include "led.h"
 #include "accelero.h"
 #include "watchdog.h"
+#include <stdio.h>
 
 /** @defgroup MAIN_APK  MAIN APK
  * @ingroup MAIN_APK
@@ -40,71 +41,45 @@ apk_State state=IDLE_STATE;
 void main_apk(void)
 {
 
-
 	/**/
-	  led_orange_control(LED_SET);
+	led_orange_control(LED_SET);
 
-	  while(1)
-	   {
+	while (1)
+	{
 
-		  switch (state)
-		  {
+		switch (state)
+		{
 
-		   case IDLE_STATE:
-		    {
-		    	if (buttonPressed==1)
-		    	{
-		    		buttonPressed=0;
-		    		state=CONTROL_STATE;
-		    		/**/
-		    		led_orange_control(LED_RESET);
-		    	}
+		case IDLE_STATE:
+		{
+			printf("IDLE_STATE\r\n");
+			break;
+		}
+		case CONTROL_STATE:
+		{
 
-			  break;
-		    }
-		   case CONTROL_STATE:
-		    {
-		  	  acc_getdata(Buffer);
+			break;
+		}
+		case STOP_STATE:
+		{
 
-		  	  process_data(Buffer);
+			break;
+		}
 
-		  	  HAL_Delay(50);
+		default:
+		{
+			break;
+		}
 
-		      if (buttonPressed==1)
-		    	{
-		    		buttonPressed=0;
-		    		state=STOP_STATE;
+#ifdef  RELEASE
+			watchdog_refresh();
+#endif
 
-		    		led_blue_control(LED_SET);
-		    		DIRECTION_LED_OFF;
-		    	}
+		}
+		HAL_Delay(50);
 
-			  break;
-		    }
-		   case STOP_STATE:
-		    {
-
-
-			  break;
-		    }
-
-		   default:
-		    {
-		    	break;
-		    }
-
-	#ifdef  DEBUG
-		    watchdog_refresh();
-	#endif
-
-
-		  }
-
-
-	  }
 	}
-
-
+}
 
 
 

@@ -42,6 +42,7 @@ int main(void)
   initialise_monitor_handles();
   printf("LAB 1------------------- \n");
 #endif
+
   /*init periph */
   ret=periph_init();
 

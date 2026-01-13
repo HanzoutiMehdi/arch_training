@@ -1,14 +1,14 @@
 /*
-  ******************************************************************************
-  * @file         main_apk.c
-  * @brief        This file provides
-  * @Author       mhanzout
-  * @date         Mar 16, 2024
-  ******************************************************************************
-  ******************************************************************************
-            EMBEDDED LOW LEVEL SOFWARE ACTIA 2024  All Rights Reserved.
-  ******************************************************************************
-  ******************************************************************************
+ ******************************************************************************
+ * @file         main_apk.c
+ * @brief        This file provides
+ * @Author       mhanzout
+ * @date         Mar 16, 2024
+ ******************************************************************************
+ ******************************************************************************
+ EMBEDDED LOW LEVEL SOFWARE ACTIA 2024  All Rights Reserved.
+ ******************************************************************************
+ ******************************************************************************
  */
 #include "processing.h"
 #include "main_apk.h"
@@ -18,6 +18,7 @@
 #include "led.h"
 #include "accelero.h"
 #include "watchdog.h"
+#include <stdio.h>
 
 /** @defgroup MAIN_APK  MAIN APK
  * @ingroup MAIN_APK
@@ -29,93 +30,68 @@ int16_t Buffer[3];
 
 uint8_t buttonPressed;
 
-typedef enum{IDLE_STATE, CONTROL_STATE, STOP_STATE} apk_State;
+typedef enum
+{
+	IDLE_STATE, CONTROL_STATE, STOP_STATE
+} apk_State;
 
-apk_State state=IDLE_STATE;
+apk_State state = IDLE_STATE;
 
 /**
-  * @brief  the main application
-  * @retval int
-  */
+ * @brief  the main application
+ * @retval int
+ */
 void main_apk(void)
 {
 
-
 	/**/
-	  led_orange_control(LED_SET);
+	led_orange_control(LED_SET);
 
-	  while(1)
-	   {
+	while (1)
+	{
 
-		  switch (state)
-		  {
+		switch (state)
+		{
 
-		   case IDLE_STATE:
-		    {
-		    	if (buttonPressed==1)
-		    	{
-		    		buttonPressed=0;
-		    		state=CONTROL_STATE;
-		    		/**/
-		    		led_orange_control(LED_RESET);
-		    	}
+		case IDLE_STATE:
+		{
+			printf("IDLE_STATE\r\n");
+			break;
+		}
+		case CONTROL_STATE:
+		{
 
-			  break;
-		    }
-		   case CONTROL_STATE:
-		    {
-		  	  acc_getdata(Buffer);
+			break;
+		}
+		case STOP_STATE:
+		{
 
-		  	  process_data(Buffer);
+			break;
+		}
 
-		  	  HAL_Delay(50);
+		default:
+		{
+			break;
+		}
 
-		      if (buttonPressed==1)
-		    	{
-		    		buttonPressed=0;
-		    		state=STOP_STATE;
+#ifdef  RELEASE
+			watchdog_refresh();
+#endif
 
-		    		led_blue_control(LED_SET);
-		    		DIRECTION_LED_OFF;
-		    	}
+		}
+		HAL_Delay(50);
 
-			  break;
-		    }
-		   case STOP_STATE:
-		    {
-
-
-			  break;
-		    }
-
-		   default:
-		    {
-		    	break;
-		    }
-
-	#ifdef  DEBUG
-		    watchdog_refresh();
-	#endif
-
-
-		  }
-
-
-	  }
 	}
-
-
-
-
+}
 
 /**
-  * @brief  ISR Function
-  * @retval int
-  */
+ * @brief  ISR Function
+ * @retval int
+ */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  UNUSED(GPIO_Pin);
-  buttonPressed=1;
+	UNUSED(GPIO_Pin);
+	buttonPressed = 1;
 }
 /**
  * @}
